@@ -7,6 +7,8 @@ This library helps streamline the process of getting the WiFi Host Driver (WHD) 
 * Framework for connecting WHD to LwIP network interface (whd_netif_funcs_t)
 
 ### What Changed?
+#### v1.0.1
+* Minor bug fix.
 #### v1.0.0
 * Initial release supporting SDIO communication and the LwIP network stack
 

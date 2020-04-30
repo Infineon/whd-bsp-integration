@@ -183,7 +183,7 @@ static cy_rslt_t init_sdio_bus(void)
              */
             #if defined(CYCFG_WIFI_HOST_WAKE_ENABLED)
                 cyhal_resource_inst_t pinRsc = cyhal_utils_get_gpio_resource(CY_WIFI_HOST_WAKE_GPIO);
-                cyhal_hwmgr_free(&pinRsc)
+                cyhal_hwmgr_free(&pinRsc);
             #endif
 
             oob_config.host_oob_pin = CY_WIFI_HOST_WAKE_GPIO;
