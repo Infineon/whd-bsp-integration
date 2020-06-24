@@ -1,4 +1,4 @@
-# Cypress WiFi Host Driver Board Support Package Integration
+# WiFi Host Driver Board Support Package Integration
 
 ## Overview
 
@@ -39,7 +39,7 @@ void cy_network_process_ethernet_data(whd_interface_t iface, whd_buffer_t buf)
 
 ## More information
 * [API Reference Guide](https://cypresssemiconductorco.github.io/whd-bsp-integration/html/modules.html)
-* [Cypress Semiconductor](http://www.cypress.com)
+* [Cypress Semiconductor, an Infineon Technologies Company](http://www.cypress.com)
 * [Cypress Semiconductor GitHub](https://github.com/cypresssemiconductorco)
 * [ModusToolbox](https://www.cypress.com/products/modustoolbox-software-environment)
 

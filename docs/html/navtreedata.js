@@ -24,14 +24,14 @@ for the JavaScript code in this file
 var NAVTREE =
 [
   [ "WiFi Host Driver Board Support Package Integration (whd-bsp-integration)", "index.html", [
-    [ "Cypress WiFi Host Driver Board Support Package Integration", "index.html", null ],
-    [ "API Reference", "@ref group_board_libs", null ]
+    [ "WiFi Host Driver Board Support Package Integration", "index.html", null ],
+    [ "API Reference", "modules.html", "modules" ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"@ref group_board_libs"
+"group__group__bsp__network__buffer.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

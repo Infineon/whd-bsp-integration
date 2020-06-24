@@ -23,4 +23,4 @@ for the JavaScript code in this file
 */
 var menudata={children:[
 {text:"Home",url:"index.html"},
-{text:"API Reference",url:"@ref group_board_libs"}]}
+{text:"API Reference",url:"modules.html"}]}
