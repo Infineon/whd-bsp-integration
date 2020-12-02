@@ -7,6 +7,9 @@ This library helps streamline the process of getting the WiFi Host Driver (WHD) 
 * Framework for connecting WHD to LwIP network interface (whd_netif_funcs_t)
 
 ### What Changed?
+#### v1.1.0
+* Fixed a memory leak when shutting down the WHD interface
+* Minor code style cleanups
 #### v1.0.2
 * Minor update for documentation & branding
 #### v1.0.1
@@ -19,11 +22,12 @@ This version of the RTOS Abstraction API was validated for compatibility with th
 
 | Software and Tools                        | Version |
 | :---                                      | :----:  |
-| ModusToolbox Software Environment         | 2.0     |
-| GCC Compiler                              | 7.4     |
-| IAR Compiler                              | 8.32    |
+| ModusToolbox Software Environment         | 2.1     |
+| GCC Compiler                              | 9.2     |
+| IAR Compiler                              | 8.4     |
 | ARM Compiler                              | 6.11    |
 
+Minimum required ModusToolbox Software Environment: v2.0
 
 ### More information
 Use the following links for more information, as needed:

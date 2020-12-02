@@ -107,9 +107,12 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga24ad5371221b9b7690a5470add6f0e3f"><td class="memItemLeft" align="right" valign="top">cy_rslt_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__bsp__wifi.html#ga24ad5371221b9b7690a5470add6f0e3f">cybsp_wifi_init_primary</a> (whd_interface_t *interface)</td></tr>
-<tr class="memdesc:ga24ad5371221b9b7690a5470add6f0e3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the primary interface for the WiFi driver on the board.  <a href="#ga24ad5371221b9b7690a5470add6f0e3f">More...</a><br /></td></tr>
-<tr class="separator:ga24ad5371221b9b7690a5470add6f0e3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7f491cc7f4a7ecf4b752d0970a1f58f3"><td class="memItemLeft" align="right" valign="top">cy_rslt_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__bsp__wifi.html#ga7f491cc7f4a7ecf4b752d0970a1f58f3">cybsp_wifi_init_primary_extended</a> (whd_interface_t *interface, whd_resource_source_t *resource_if, whd_buffer_funcs_t *buffer_if, whd_netif_funcs_t *netif_if)</td></tr>
+<tr class="memdesc:ga7f491cc7f4a7ecf4b752d0970a1f58f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the primary interface for the WiFi driver on the board.  <a href="#ga7f491cc7f4a7ecf4b752d0970a1f58f3">More...</a><br /></td></tr>
+<tr class="separator:ga7f491cc7f4a7ecf4b752d0970a1f58f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafc78b1c0b031052308051088ee2021b7"><td class="memItemLeft" align="right" valign="top">static cy_rslt_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__bsp__wifi.html#gafc78b1c0b031052308051088ee2021b7">cybsp_wifi_init_primary</a> (whd_interface_t *interface)</td></tr>
+<tr class="memdesc:gafc78b1c0b031052308051088ee2021b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the primary interface for the WiFi driver on the board using the default resource, buffer, and network interfaces.  <a href="#gafc78b1c0b031052308051088ee2021b7">More...</a><br /></td></tr>
+<tr class="separator:gafc78b1c0b031052308051088ee2021b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga13b5648cec341b96068e2b372388eea4"><td class="memItemLeft" align="right" valign="top">cy_rslt_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__bsp__wifi.html#ga13b5648cec341b96068e2b372388eea4">cybsp_wifi_init_secondary</a> (whd_interface_t *interface, whd_mac_t *mac_address)</td></tr>
 <tr class="memdesc:ga13b5648cec341b96068e2b372388eea4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function initializes and adds a secondary interface to the WiFi driver.  <a href="#ga13b5648cec341b96068e2b372388eea4">More...</a><br /></td></tr>
 <tr class="separator:ga13b5648cec341b96068e2b372388eea4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,18 +157,40 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga24ad5371221b9b7690a5470add6f0e3f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga24ad5371221b9b7690a5470add6f0e3f">&#9670;&nbsp;</a></span>cybsp_wifi_init_primary()</h2>
+<a id="ga7f491cc7f4a7ecf4b752d0970a1f58f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7f491cc7f4a7ecf4b752d0970a1f58f3">&#9670;&nbsp;</a></span>cybsp_wifi_init_primary_extended()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">cy_rslt_t cybsp_wifi_init_primary </td>
+          <td class="memname">cy_rslt_t cybsp_wifi_init_primary_extended </td>
           <td>(</td>
           <td class="paramtype">whd_interface_t *&#160;</td>
-          <td class="paramname"><em>interface</em></td><td>)</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">whd_resource_source_t *&#160;</td>
+          <td class="paramname"><em>resource_if</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">whd_buffer_funcs_t *&#160;</td>
+          <td class="paramname"><em>buffer_if</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">whd_netif_funcs_t *&#160;</td>
+          <td class="paramname"><em>netif_if</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -178,6 +203,45 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">interface</td><td>Interface to be initialized </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">resource_if</td><td>Pointer to resource interface to provide resources to the driver initialization process. Passing NULL will use the default. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffer_if</td><td>Pointer to a buffer interface to provide buffer related services to the driver instance. Passing NULL will use the default. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">netif_if</td><td>Pointer to a whd_netif_funcs_t to provide network stack services to the driver instance. Passing NULL will use the default.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>CY_RSLT_SUCCESS for successful initialization or error if initialization failed. </dd></dl>
+
+</div>
+</div>
+<a id="gafc78b1c0b031052308051088ee2021b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafc78b1c0b031052308051088ee2021b7">&#9670;&nbsp;</a></span>cybsp_wifi_init_primary()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static cy_rslt_t cybsp_wifi_init_primary </td>
+          <td>(</td>
+          <td class="paramtype">whd_interface_t *&#160;</td>
+          <td class="paramname"><em>interface</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initializes the primary interface for the WiFi driver on the board using the default resource, buffer, and network interfaces. </p>
+<p>See <a class="el" href="group__group__bsp__wifi.html#ga7f491cc7f4a7ecf4b752d0970a1f58f3" title="Initializes the primary interface for the WiFi driver on the board. ">cybsp_wifi_init_primary_extended()</a> for more details.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">interface</td><td>Interface to be initialized</td></tr>
   </table>
   </dd>
 </dl>
@@ -212,11 +276,11 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>This function initializes and adds a secondary interface to the WiFi driver. </p>
-<dl class="section note"><dt>Note</dt><dd>This function does not initialize the WiFi driver or turn on the WiFi chip. That is required to be done by first calling <a class="el" href="group__group__bsp__wifi.html#ga24ad5371221b9b7690a5470add6f0e3f">cybsp_wifi_init_primary</a>.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function does not initialize the WiFi driver or turn on the WiFi chip. That is required to be done by first calling <a class="el" href="group__group__bsp__wifi.html#gafc78b1c0b031052308051088ee2021b7">cybsp_wifi_init_primary</a>.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">interface</td><td>Interface to be initialized </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mac_address</td><td>Mac address for secondary interface </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mac_address</td><td>Mac address for secondary interface</td></tr>
   </table>
   </dd>
 </dl>
@@ -246,7 +310,7 @@ Functions</h2></td></tr>
  2) Turns off the WiFi chip.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">interface</td><td>Interface to be de-initialized. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">interface</td><td>Interface to be de-initialized.</td></tr>
   </table>
   </dd>
 </dl>
@@ -271,7 +335,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Gets the wifi driver instance initialized by the driver. </p>
-<p>This should only be called after being initialized by <a class="el" href="group__group__bsp__wifi.html#ga24ad5371221b9b7690a5470add6f0e3f">cybsp_wifi_init_primary()</a> and before being deinitialized by <a class="el" href="group__group__bsp__wifi.html#ga77555750b014230bd78143aefb9f379b">cybsp_wifi_deinit()</a>. This is also the only time where the driver reference is valid.</p>
+<p>This should only be called after being initialized by <a class="el" href="group__group__bsp__wifi.html#gafc78b1c0b031052308051088ee2021b7">cybsp_wifi_init_primary()</a> and before being deinitialized by <a class="el" href="group__group__bsp__wifi.html#ga77555750b014230bd78143aefb9f379b">cybsp_wifi_deinit()</a>. This is also the only time where the driver reference is valid.</p>
 <dl class="section return"><dt>Returns</dt><dd>Wifi driver instance pointer. </dd></dl>
 
 </div>
