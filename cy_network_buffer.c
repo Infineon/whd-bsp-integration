@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include "cy_network_buffer.h"
 #include "cy_utils.h"
+#include "cyhal_system.h"
 #include "lwip/pbuf.h"
 #include "lwip/memp.h"
 
@@ -37,22 +38,35 @@
 whd_result_t cy_host_buffer_get(whd_buffer_t* buffer, whd_buffer_dir_t direction,
                                 unsigned short size, unsigned long timeout_ms)
 {
-    CY_UNUSED_PARAMETER(direction);
-    CY_UNUSED_PARAMETER(timeout_ms);
     struct pbuf* p = NULL;
-    if ((direction == WHD_NETWORK_TX) && (size <= PBUF_POOL_BUFSIZE))
+    unsigned long counter = 0;
+
+    do
     {
-        p = pbuf_alloc(PBUF_RAW, size, PBUF_POOL);
-    }
-    else
-    {
-        p = pbuf_alloc(PBUF_RAW, size+SDIO_BLOCK_SIZE, PBUF_RAM);
-        if (p != NULL)
+        if (direction == WHD_NETWORK_TX)
         {
-            p->len      = size;
-            p->tot_len -=  SDIO_BLOCK_SIZE;
+            // Allocate from the POOL if possible to avoid dynamic memory allocation
+            pbuf_type type = (size <= PBUF_POOL_BUFSIZE) ? PBUF_POOL : PBUF_RAM;
+            p = pbuf_alloc(PBUF_RAW, size, type);
         }
-    }
+        else
+        {
+            // Increase allocation size to ensure the SDIO can write fully aligned blocks for
+            // best throughput performance
+            p = pbuf_alloc(PBUF_RAW, size + SDIO_BLOCK_SIZE, PBUF_RAM);
+            if (p != NULL)
+            {
+                p->len      = size;
+                p->tot_len -= SDIO_BLOCK_SIZE;
+            }
+        }
+
+        if (NULL == p)
+        {
+            cyhal_system_delay_ms(1);
+        }
+    } while (NULL == p && ++counter < timeout_ms);
+
     if (p != NULL)
     {
         *buffer = p;

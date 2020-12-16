@@ -28,7 +28,9 @@
 #include "cyabs_rtos.h"
 #include "whd_types.h"
 #include "cyhal.h"
+#if defined(COMPONENT_BSP_DESIGN_MODUS) || defined(COMPONENT_CUSTOM_DESIGN_MODUS)
 #include "cycfg.h"
+#endif
 
 #if defined(__cplusplus)
 extern "C" {
