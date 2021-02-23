@@ -7,6 +7,8 @@ This library helps streamline the process of getting the WiFi Host Driver (WHD) 
 * Framework for connecting WHD to LwIP network interface (whd_netif_funcs_t)
 
 ### What Changed?
+#### v1.1.2
+* Robustness update for WLAN initialization
 #### v1.1.1
 * Update network buffer allocation for improved performance
 #### v1.1.0
@@ -39,4 +41,4 @@ Use the following links for more information, as needed:
 * [ModusToolbox](https://www.cypress.com/products/modustoolbox-software-environment)
 
 ---
-© Cypress Semiconductor Corporation, 2019-2020.
+© Cypress Semiconductor Corporation, 2019-2021.
