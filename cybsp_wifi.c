@@ -290,12 +290,9 @@ cy_rslt_t cybsp_wifi_deinit(whd_interface_t interface)
     cy_rslt_t result = whd_wifi_off(interface);
     if (result == CY_RSLT_SUCCESS)
     {
+        whd_bus_sdio_detach(whd_drv);
+        cyhal_gpio_free(CYBSP_WIFI_WL_REG_ON);
         result = whd_deinit(interface);
-        if (result == CY_RSLT_SUCCESS)
-        {
-            whd_bus_sdio_detach(whd_drv);
-            cyhal_gpio_free(CYBSP_WIFI_WL_REG_ON);
-        }
     }
     return result;
 }
