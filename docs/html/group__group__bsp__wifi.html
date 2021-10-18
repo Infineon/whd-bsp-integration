@@ -104,14 +104,25 @@ Macros</h2></td></tr>
 <tr class="memitem:gab868840379127847a984d02327620dd4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__bsp__wifi.html#gab868840379127847a984d02327620dd4">CYBSP_RSLT_WIFI_SDIO_ENUM_TIMEOUT</a>&#160;&#160;&#160;(CY_RSLT_CREATE(CY_RSLT_TYPE_ERROR, CY_RSLT_MODULE_BOARD_LIB_WHD_INTEGRATION, 1))</td></tr>
 <tr class="memdesc:gab868840379127847a984d02327620dd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">SDIO enumeration failed.  <a href="#gab868840379127847a984d02327620dd4">More...</a><br /></td></tr>
 <tr class="separator:gab868840379127847a984d02327620dd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga64a5bc537b95b4a38be7411be678de2a"><td class="memItemLeft" align="right" valign="top"><a id="ga64a5bc537b95b4a38be7411be678de2a"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__bsp__wifi.html#ga64a5bc537b95b4a38be7411be678de2a">CYBSP_RSLT_WIFI_SDIO_ENUM_IO_NOT_SUPPORTED</a>&#160;&#160;&#160;(CY_RSLT_CREATE(CY_RSLT_TYPE_ERROR, CY_RSLT_MODULE_BOARD_LIB_WHD_INTEGRATION, 2))</td></tr>
+<tr class="memdesc:ga64a5bc537b95b4a38be7411be678de2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">SD device does not support IO functionality. <br /></td></tr>
+<tr class="separator:ga64a5bc537b95b4a38be7411be678de2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga63062663dcdabc7a753c54a27ce4f307"><td class="memItemLeft" align="right" valign="top"><a id="ga63062663dcdabc7a753c54a27ce4f307"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__bsp__wifi.html#ga63062663dcdabc7a753c54a27ce4f307">CYBSP_RSLT_WIFI_SDIO_ENUM_NOT_READY</a>&#160;&#160;&#160;(CY_RSLT_CREATE(CY_RSLT_TYPE_ERROR, CY_RSLT_MODULE_BOARD_LIB_WHD_INTEGRATION, 3))</td></tr>
+<tr class="memdesc:ga63062663dcdabc7a753c54a27ce4f307"><td class="mdescLeft">&#160;</td><td class="mdescRight">SDIO device is not ready. <br /></td></tr>
+<tr class="separator:ga63062663dcdabc7a753c54a27ce4f307"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga854d0742defe0e9ee860209e7bd92512"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__bsp__wifi.html#ga854d0742defe0e9ee860209e7bd92512">CYBSP_RSLT_WIFI_SDIO_HS_SWITCH_FAILED</a>&#160;&#160;&#160;(CY_RSLT_CREATE(CY_RSLT_TYPE_ERROR, CY_RSLT_MODULE_BOARD_LIB_WHD_INTEGRATION, 4))</td></tr>
+<tr class="memdesc:ga854d0742defe0e9ee860209e7bd92512"><td class="mdescLeft">&#160;</td><td class="mdescRight">SDIO switch to High Speed mode failed.  <a href="#ga854d0742defe0e9ee860209e7bd92512">More...</a><br /></td></tr>
+<tr class="separator:ga854d0742defe0e9ee860209e7bd92512"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga7f491cc7f4a7ecf4b752d0970a1f58f3"><td class="memItemLeft" align="right" valign="top">cy_rslt_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__bsp__wifi.html#ga7f491cc7f4a7ecf4b752d0970a1f58f3">cybsp_wifi_init_primary_extended</a> (whd_interface_t *interface, whd_resource_source_t *resource_if, whd_buffer_funcs_t *buffer_if, whd_netif_funcs_t *netif_if)</td></tr>
-<tr class="memdesc:ga7f491cc7f4a7ecf4b752d0970a1f58f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the primary interface for the WiFi driver on the board.  <a href="#ga7f491cc7f4a7ecf4b752d0970a1f58f3">More...</a><br /></td></tr>
-<tr class="separator:ga7f491cc7f4a7ecf4b752d0970a1f58f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1a1a868768f1624dc0e7132c2fcae988"><td class="memItemLeft" align="right" valign="top">cy_rslt_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__bsp__wifi.html#ga1a1a868768f1624dc0e7132c2fcae988">cybsp_wifi_init_primary_extended</a> (whd_interface_t *interface, whd_init_config_t *init_config, whd_resource_source_t *resource_if, whd_buffer_funcs_t *buffer_if, whd_netif_funcs_t *netif_if)</td></tr>
+<tr class="memdesc:ga1a1a868768f1624dc0e7132c2fcae988"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the primary interface for the WiFi driver on the board.  <a href="#ga1a1a868768f1624dc0e7132c2fcae988">More...</a><br /></td></tr>
+<tr class="separator:ga1a1a868768f1624dc0e7132c2fcae988"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafc78b1c0b031052308051088ee2021b7"><td class="memItemLeft" align="right" valign="top">static cy_rslt_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__bsp__wifi.html#gafc78b1c0b031052308051088ee2021b7">cybsp_wifi_init_primary</a> (whd_interface_t *interface)</td></tr>
-<tr class="memdesc:gafc78b1c0b031052308051088ee2021b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the primary interface for the WiFi driver on the board using the default resource, buffer, and network interfaces.  <a href="#gafc78b1c0b031052308051088ee2021b7">More...</a><br /></td></tr>
+<tr class="memdesc:gafc78b1c0b031052308051088ee2021b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the primary interface for the WiFi driver on the board using the default configuration, resource, buffer, and network interfaces.  <a href="#gafc78b1c0b031052308051088ee2021b7">More...</a><br /></td></tr>
 <tr class="separator:gafc78b1c0b031052308051088ee2021b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga13b5648cec341b96068e2b372388eea4"><td class="memItemLeft" align="right" valign="top">cy_rslt_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__bsp__wifi.html#ga13b5648cec341b96068e2b372388eea4">cybsp_wifi_init_secondary</a> (whd_interface_t *interface, whd_mac_t *mac_address)</td></tr>
 <tr class="memdesc:ga13b5648cec341b96068e2b372388eea4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function initializes and adds a secondary interface to the WiFi driver.  <a href="#ga13b5648cec341b96068e2b372388eea4">More...</a><br /></td></tr>
@@ -156,9 +167,25 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ga854d0742defe0e9ee860209e7bd92512"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga854d0742defe0e9ee860209e7bd92512">&#9670;&nbsp;</a></span>CYBSP_RSLT_WIFI_SDIO_HS_SWITCH_FAILED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CYBSP_RSLT_WIFI_SDIO_HS_SWITCH_FAILED&#160;&#160;&#160;(CY_RSLT_CREATE(CY_RSLT_TYPE_ERROR, CY_RSLT_MODULE_BOARD_LIB_WHD_INTEGRATION, 4))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>SDIO switch to High Speed mode failed. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga7f491cc7f4a7ecf4b752d0970a1f58f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7f491cc7f4a7ecf4b752d0970a1f58f3">&#9670;&nbsp;</a></span>cybsp_wifi_init_primary_extended()</h2>
+<a id="ga1a1a868768f1624dc0e7132c2fcae988"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1a1a868768f1624dc0e7132c2fcae988">&#9670;&nbsp;</a></span>cybsp_wifi_init_primary_extended()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -168,6 +195,12 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">whd_interface_t *&#160;</td>
           <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">whd_init_config_t *&#160;</td>
+          <td class="paramname"><em>init_config</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -203,6 +236,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">interface</td><td>Interface to be initialized </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">init_config</td><td>Pointer to the configuration parameters to initialize the driver. Passing NULL will use default values. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">resource_if</td><td>Pointer to resource interface to provide resources to the driver initialization process. Passing NULL will use the default. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">buffer_if</td><td>Pointer to a buffer interface to provide buffer related services to the driver instance. Passing NULL will use the default. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">netif_if</td><td>Pointer to a whd_netif_funcs_t to provide network stack services to the driver instance. Passing NULL will use the default.</td></tr>
@@ -237,8 +271,8 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Initializes the primary interface for the WiFi driver on the board using the default resource, buffer, and network interfaces. </p>
-<p>See <a class="el" href="group__group__bsp__wifi.html#ga7f491cc7f4a7ecf4b752d0970a1f58f3" title="Initializes the primary interface for the WiFi driver on the board. ">cybsp_wifi_init_primary_extended()</a> for more details.</p>
+<p>Initializes the primary interface for the WiFi driver on the board using the default configuration, resource, buffer, and network interfaces. </p>
+<p>See <a class="el" href="group__group__bsp__wifi.html#ga1a1a868768f1624dc0e7132c2fcae988" title="Initializes the primary interface for the WiFi driver on the board. ">cybsp_wifi_init_primary_extended()</a> for more details.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">interface</td><td>Interface to be initialized</td></tr>
@@ -306,11 +340,12 @@ Functions</h2></td></tr>
 
 <p>De-initializes all WiFi interfaces and the WiFi driver. </p>
 <p>This function does the following:<br />
- 1) Deinitializes all WiFi interfaces and WiFi driver.<br />
- 2) Turns off the WiFi chip.</p>
+ 1) Deinitializes all WiFi interfaces.<br />
+ 2) Deinitializes the WiFi driver.<br />
+ 3) Turns off the WiFi chip.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">interface</td><td>Interface to be de-initialized.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">interface</td><td>Either the Primary or Secondary interface.</td></tr>
   </table>
   </dd>
 </dl>

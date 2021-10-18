@@ -1,5 +1,6 @@
 var group__group__bsp__network__buffer =
 [
+    [ "cy_buffer_pool_init", "group__group__bsp__network__buffer.html#ga6f5114fb8aa816f28ccb6370507c36c4", null ],
     [ "cy_host_buffer_get", "group__group__bsp__network__buffer.html#gacdcb08de31442a9e5d1f32b4e99a2de3", null ],
     [ "cy_buffer_release", "group__group__bsp__network__buffer.html#gaac05ad889f09b6e8ef43503ba475a21f", null ],
     [ "cy_buffer_get_current_piece_data_pointer", "group__group__bsp__network__buffer.html#ga782b3a560466f80c438e5c306107eeb1", null ],

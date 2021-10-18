@@ -1,5 +1,5 @@
 /***********************************************************************************************//**
- * \file cy_network_buffer.c
+ * \file cy_network_buffer_lwip.c
  *
  * \brief
  * Basic set of APIs for dealing with network packet buffers. This is used by WHD
@@ -7,7 +7,9 @@
  *
  ***************************************************************************************************
  * \copyright
- * Copyright 2018-2021 Cypress Semiconductor Corporation
+ * Copyright 2018-2021 Cypress Semiconductor Corporation (an Infineon company) or
+ * an affiliate of Cypress Semiconductor Corporation
+ *
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,9 +30,24 @@
 #include "cy_utils.h"
 #include "cyhal_system.h"
 #include "lwip/pbuf.h"
-#include "lwip/memp.h"
 
 #define  SDIO_BLOCK_SIZE (64U)
+
+//--------------------------------------------------------------------------------------------------
+// cy_buffer_pool_init
+//--------------------------------------------------------------------------------------------------
+whd_result_t cy_buffer_pool_init(void* tx_packet_pool, void* rx_packet_pool)
+{
+    CY_UNUSED_PARAMETER(tx_packet_pool);
+    CY_UNUSED_PARAMETER(rx_packet_pool);
+
+    /*
+     * Not used for LwIP.
+     */
+
+    return WHD_SUCCESS;
+}
+
 
 //--------------------------------------------------------------------------------------------------
 // cy_host_buffer_get
@@ -39,7 +56,7 @@ whd_result_t cy_host_buffer_get(whd_buffer_t* buffer, whd_buffer_dir_t direction
                                 unsigned short size, unsigned long timeout_ms)
 {
     struct pbuf* p = NULL;
-    unsigned long counter = 0;
+    uint32_t counter = 0;
 
     do
     {
@@ -65,7 +82,7 @@ whd_result_t cy_host_buffer_get(whd_buffer_t* buffer, whd_buffer_dir_t direction
         {
             cyhal_system_delay_ms(1);
         }
-    } while (NULL == p && ++counter < timeout_ms);
+    } while ((NULL == p) && (++counter < timeout_ms));
 
     if (p != NULL)
     {
@@ -119,11 +136,11 @@ whd_result_t cy_buffer_set_size(whd_buffer_t buffer, unsigned short size)
     CY_ASSERT(buffer != NULL);
     struct pbuf* pbuffer = (struct pbuf*)buffer;
 
-    if (size > ((unsigned short)WHD_LINK_MTU +
+    if (size > ((uint16_t)WHD_LINK_MTU +
                 LWIP_MEM_ALIGN_SIZE(LWIP_MEM_ALIGN_SIZE(sizeof(struct pbuf))) +
                 LWIP_MEM_ALIGN_SIZE(size)))
     {
-        return WHD_PMK_WRONG_LENGTH;
+        return WHD_BUFFER_SIZE_SET_ERROR;
     }
 
     pbuffer->tot_len = size;
@@ -143,7 +160,7 @@ whd_result_t cy_buffer_add_remove_at_front(whd_buffer_t* buffer, int32_t add_rem
 
     if ((u8_t)0 != pbuf_header(*pbuffer, (s16_t)(-add_remove_amount)))
     {
-        return WHD_PMK_WRONG_LENGTH;
+        return WHD_BUFFER_POINTER_MOVE_ERROR;
     }
 
     return WHD_SUCCESS;
