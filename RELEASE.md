@@ -3,10 +3,14 @@ This library helps streamline the process of getting the WiFi Host Driver (WHD) 
 
 ### What's Included?
 * APIs for setting up the WHD interface with the BSP's SDIO interface.
-* APIs for connecting WHD to LwIP memory buffers (whd_buffer_funcs_t)
-* Framework for connecting WHD to LwIP network interface (whd_netif_funcs_t)
+* APIs for connecting WHD to LwIP/NetXDuo memory buffers (whd_buffer_funcs_t)
+* Framework for connecting WHD to LwIP/NetXDuo network interface (whd_netif_funcs_t)
 
 ### What Changed?
+#### v2.1.0
+* Added support for dyanmically allocated NetX Duo packets to support WHD IOVARs with payloads larger than MTU.
+* Added support for NetX Duo
+* Made SDIO initialization more robust
 #### v2.0.0
 * Added support for different communication protocols (SDIO, SPI, DMA) between MCU and Radio
 * Card initialization process improvements. Code now checks whether SDIO device supports 1.8V signaling, and, if it does, performs the actions needed in order to switch to 1.8V.
@@ -38,8 +42,8 @@ This version of the RTOS Abstraction API was validated for compatibility with th
 | :---                                      | :----:  |
 | ModusToolbox™ Software Environment        | 2.4.0   |
 | GCC Compiler                              | 10.3.1  |
-| IAR Compiler                              | 8.4     |
-| ARM Compiler                              | 6.11    |
+| IAR Compiler                              | 9.30.1  |
+| ARM Compiler                              | 6.16    |
 
 Minimum required ModusToolbox™ Software Environment: v2.0
 
@@ -51,4 +55,4 @@ Use the following links for more information, as needed:
 * [ModusToolbox™](https://www.cypress.com/products/modustoolbox-software-environment)
 
 ---
-© Cypress Semiconductor Corporation (an Infineon company) or an affiliate of Cypress Semiconductor Corporation, 2019-2021.
+© Cypress Semiconductor Corporation (an Infineon company) or an affiliate of Cypress Semiconductor Corporation, 2019-2022.

@@ -1,5 +1,10 @@
 var group__group__bsp__wifi =
 [
+    [ "CY_WIFI_THREAD_STACK_SIZE", "group__group__bsp__wifi.html#ga42b37eb558b33e27c805a647d34e35ee", null ],
+    [ "CY_WIFI_THREAD_PRIORITY", "group__group__bsp__wifi.html#ga37de7fccd088d032385e7bea14d47af9", null ],
+    [ "CY_WIFI_COUNTRY", "group__group__bsp__wifi.html#ga71f69d6ee495addd6dde24241a18bb08", null ],
+    [ "CY_WIFI_OOB_INTR_PRIORITY", "group__group__bsp__wifi.html#gacca3b2defde1e423420b6fb0c82a6bbb", null ],
+    [ "CY_USE_OOB_INTR", "group__group__bsp__wifi.html#ga0cc4b05c4d7f61925a0bf38761e456b9", null ],
     [ "CYBSP_RSLT_WIFI_INIT_FAILED", "group__group__bsp__wifi.html#ga1ddf3533adfa2e8f298f7edab7a8fa0c", null ],
     [ "CYBSP_RSLT_WIFI_SDIO_ENUM_TIMEOUT", "group__group__bsp__wifi.html#gab868840379127847a984d02327620dd4", null ],
     [ "CYBSP_RSLT_WIFI_SDIO_ENUM_IO_NOT_SUPPORTED", "group__group__bsp__wifi.html#ga64a5bc537b95b4a38be7411be678de2a", null ],

@@ -7,7 +7,7 @@
  *
  ***************************************************************************************************
  * \copyright
- * Copyright 2018-2021 Cypress Semiconductor Corporation (an Infineon company) or
+ * Copyright 2018-2022 Cypress Semiconductor Corporation (an Infineon company) or
  * an affiliate of Cypress Semiconductor Corporation
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -53,13 +53,14 @@ whd_result_t cy_buffer_pool_init(void* tx_packet_pool, void* rx_packet_pool)
 // cy_host_buffer_get
 //--------------------------------------------------------------------------------------------------
 whd_result_t cy_host_buffer_get(whd_buffer_t* buffer, whd_buffer_dir_t direction,
-                                unsigned short size, unsigned long timeout_ms)
+                                uint16_t size, uint32_t timeout_ms)
 {
     struct pbuf* p = NULL;
     uint32_t counter = 0;
 
     do
     {
+        counter++;
         if (direction == WHD_NETWORK_TX)
         {
             // Allocate from the POOL if possible to avoid dynamic memory allocation
@@ -82,7 +83,7 @@ whd_result_t cy_host_buffer_get(whd_buffer_t* buffer, whd_buffer_dir_t direction
         {
             cyhal_system_delay_ms(1);
         }
-    } while ((NULL == p) && (++counter < timeout_ms));
+    } while ((NULL == p) && (counter <= timeout_ms));
 
     if (p != NULL)
     {
@@ -131,7 +132,7 @@ uint16_t cy_buffer_get_current_piece_size(whd_buffer_t buffer)
 //--------------------------------------------------------------------------------------------------
 // cy_buffer_set_size
 //--------------------------------------------------------------------------------------------------
-whd_result_t cy_buffer_set_size(whd_buffer_t buffer, unsigned short size)
+whd_result_t cy_buffer_set_size(whd_buffer_t buffer, uint16_t size)
 {
     CY_ASSERT(buffer != NULL);
     struct pbuf* pbuffer = (struct pbuf*)buffer;

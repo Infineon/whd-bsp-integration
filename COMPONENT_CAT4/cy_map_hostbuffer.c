@@ -6,7 +6,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2021 Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2021-2022 Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation
 *
 * SPDX-License-Identifier: Apache-2.0
@@ -38,9 +38,9 @@ extern "C" {
 *******************************************************************************/
 
 cy_rslt_t host_buffer_get(wiced_buffer_t* buffer, wwd_buffer_dir_t direction,
-                          unsigned short size, bool wait)
+                          uint16_t size, bool wait)
 {
-    unsigned long timeout_ms = wait ? HOST_BUFFER_WAIT_MS : 0UL;
+    uint32_t timeout_ms = wait ? HOST_BUFFER_WAIT_MS : 0UL;
 
     return (cy_rslt_t)cy_host_buffer_get((whd_buffer_t*)buffer, (whd_buffer_dir_t)direction,
                                          size, timeout_ms);
@@ -77,7 +77,7 @@ uint16_t host_buffer_get_current_piece_size(wiced_buffer_t buffer)
 //--------------------------------------------------------------------------------------------------
 // host_buffer_set_size
 //--------------------------------------------------------------------------------------------------
-cy_rslt_t host_buffer_set_size(wiced_buffer_t buffer, unsigned short size)
+cy_rslt_t host_buffer_set_size(wiced_buffer_t buffer, uint16_t size)
 {
     return (cy_rslt_t)cy_buffer_set_size((whd_buffer_t)buffer, size);
 }

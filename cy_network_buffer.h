@@ -7,7 +7,7 @@
  *
  ***************************************************************************************************
  * \copyright
- * Copyright 2018-2021 Cypress Semiconductor Corporation (an Infineon company) or
+ * Copyright 2018-2022 Cypress Semiconductor Corporation (an Infineon company) or
  * an affiliate of Cypress Semiconductor Corporation
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -77,7 +77,7 @@ whd_result_t cy_buffer_pool_init(void* tx_packet_pool, void* rx_packet_pool);
  *  @return          : CY_RSLT_SUCCESS or WHD_BUFFER_ALLOC_FAIL if the buffer could not be allocated
  */
 whd_result_t cy_host_buffer_get(whd_buffer_t* buffer, whd_buffer_dir_t direction,
-                                unsigned short size, unsigned long timeout_ms);
+                                uint16_t size, uint32_t timeout_ms);
 
 /** Releases a packet buffer
  *
@@ -127,7 +127,7 @@ uint16_t cy_buffer_get_current_piece_size(whd_buffer_t buffer);
  *
  *  @return       : CY_RSLT_SUCCESS or WHD_BUFFER_SIZE_SET_ERROR if the requested size is not valid
  */
-whd_result_t cy_buffer_set_size(whd_buffer_t buffer, unsigned short size);
+whd_result_t cy_buffer_set_size(whd_buffer_t buffer, uint16_t size);
 
 /** Moves the current pointer of a packet buffer
  *

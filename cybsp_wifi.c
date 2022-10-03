@@ -6,7 +6,7 @@
  *
  ***************************************************************************************************
  * \copyright
- * Copyright 2018-2021 Cypress Semiconductor Corporation (an Infineon company) or
+ * Copyright 2018-2022 Cypress Semiconductor Corporation (an Infineon company) or
  * an affiliate of Cypress Semiconductor Corporation
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -30,40 +30,81 @@
 #include "cyabs_rtos.h"
 #include "whd_types.h"
 #include "cyhal.h"
-#if defined(COMPONENT_BSP_DESIGN_MODUS) || defined(COMPONENT_CUSTOM_DESIGN_MODUS)
-#include "cycfg.h"
-#endif
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
+/**
+ * \addtogroup group_bsp_wifi
+ * \{
+ * Macros to abstract out whether the LEDs & Buttons are wired high or active low.
+ */
+
+/** Defines the amount of stack memory available for the wifi thread. */
 #if !defined(CY_WIFI_THREAD_STACK_SIZE)
 #define CY_WIFI_THREAD_STACK_SIZE           (5120)
 #endif
+
+/** Defines the priority of the thread that services wifi packets. Legal values are defined by the
+ *  RTOS being used.
+ */
 #if !defined(CY_WIFI_THREAD_PRIORITY)
 #define CY_WIFI_THREAD_PRIORITY             (CY_RTOS_PRIORITY_HIGH)
 #endif
+
+/** Defines the country this will operate in for wifi initialization parameters. See the
+ *  wifi-host-driver's whd_country_code_t for legal options.
+ */
 #if !defined(CY_WIFI_COUNTRY)
 #define CY_WIFI_COUNTRY                     (WHD_COUNTRY_AUSTRALIA)
 #endif
+
+/** Defines the priority of the interrupt that handles out-of-band notifications from the wifi
+ *  chip. Legal values are defined by the MCU running this code.
+ */
+#if !defined(CY_WIFI_OOB_INTR_PRIORITY)
+    #define CY_WIFI_OOB_INTR_PRIORITY       (2)
+#endif
+
+/** Defines whether to use the out-of-band pin to allow the WIFI chip to wake up the MCU. */
+#if defined(CY_WIFI_HOST_WAKE_SW_FORCE)
+    #define CY_USE_OOB_INTR                 (CY_WIFI_HOST_WAKE_SW_FORCE)
+#else
+    #define CY_USE_OOB_INTR                 (1u)
+#endif // defined(CY_WIFI_HOST_WAKE_SW_FORCE)
+
+/** \} group_bsp_wifi */
 
 #define DEFAULT_OOB_PIN                     (0)
 #define WLAN_POWER_UP_DELAY_MS              (250)
 #define WLAN_CBUCK_DISCHARGE_MS             (10)
 
-#if (CYHAL_DRIVER_AVAILABLE_SDIO && (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SDIO_INTERFACE))
-#define WIFI_MODE_SDIO
-#elif (CYHAL_DRIVER_AVAILABLE_SPI && (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SPI_INTERFACE))
-#define WIFI_MODE_SPI
-#elif (CYHAL_DRIVER_AVAILABLE_DMA && (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_M2M_INTERFACE))
-#define WIFI_MODE_M2M
+#if defined(COMPONENT_WIFI_INTERFACE_SDIO) || \
+    defined(COMPONENT_WIFI_INTERFACE_SPI) || \
+    defined(COMPONENT_WIFI_INTERFACE_M2M)
+
+// Old versions of the BSP performed WIFI SDIO init as part of cybsp_init() this has been replaced
+// with just minimal resource reservation when needed in the latest versions of BSPs.
+#define CYBSP_WIFI_SDIO_NEEDS_INIT          (1)
+
+#else
+
+#if (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SDIO_INTERFACE)
+#define COMPONENT_WIFI_INTERFACE_SDIO
+#elif (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SPI_INTERFACE)
+#define COMPONENT_WIFI_INTERFACE_SPI
+#elif (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_M2M_INTERFACE)
+#define COMPONENT_WIFI_INTERFACE_M2M
 #else
 // For old versions of HAL/BSP fallback to the default interface
-#define WIFI_MODE_SDIO
+#define COMPONENT_WIFI_INTERFACE_SDIO
 #endif
 
-#if !defined(WIFI_MODE_M2M)
+#endif // if defined(COMPONENT_WIFI_INTERFACE_SDIO) || defined(COMPONENT_WIFI_INTERFACE_SPI) ||
+// defined(COMPONENT_WIFI_INTERFACE_M2M)
+
+#if !defined(COMPONENT_WIFI_INTERFACE_M2M)
 
 #define SDIO_ENUMERATION_TRIES              (500)
 #define SDIO_RETRY_DELAY_MS                 (1)
@@ -119,20 +160,8 @@ extern "C" {
 //                                   |     00010000b      |     00000010b      |
 #define SDIO_CMD52_CCCR_SPEED_SELECT_RESP_HS_SELECTED   (0x00001002)
 
-#if !defined(CY_WIFI_OOB_INTR_PRIORITY)
-    #define CY_WIFI_OOB_INTR_PRIORITY   2
-#endif
-
-// Determine whether to use the SDIO oob interrupt.
-// Use CY_WIFI_HOST_WAKE_SW_FORCE to force the enable status.
-#if defined(CY_WIFI_HOST_WAKE_SW_FORCE)
-    #define CY_SDIO_BUS_USE_OOB_INTR    CY_WIFI_HOST_WAKE_SW_FORCE
-#else
-    #define CY_SDIO_BUS_USE_OOB_INTR    (1u)
-#endif // defined(CY_WIFI_HOST_WAKE_SW_FORCE)
-
 // *SUSPEND-FORMATTING*
-#if (CY_SDIO_BUS_USE_OOB_INTR != 0)
+#if (CY_USE_OOB_INTR != 0)
     // Setup configuration based on configurator or BSP, where configurator has precedence.
     #if defined(CYCFG_WIFI_HOST_WAKE_ENABLED)
         #define CY_WIFI_HOST_WAKE_GPIO  CYCFG_WIFI_HOST_WAKE_GPIO
@@ -151,10 +180,10 @@ extern "C" {
             #error "CYBSP_WIFI_HOST_WAKE_IRQ_EVENT must be defined"
         #endif
     #endif // if defined(CYCFG_WIFI_HOST_WAKE_ENABLED)
-#else // if (CY_SDIO_BUS_USE_OOB_INTR != 0)
+#else // if (CY_USE_OOB_INTR != 0)
     #define CY_WIFI_HOST_WAKE_GPIO      CYHAL_NC_PIN_VALUE
     #define CY_WIFI_HOST_WAKE_IRQ_EVENT 0
-#endif // (CY_SDIO_BUS_USE_OOB_INTR != 0)
+#endif // (CY_USE_OOB_INTR != 0)
 // *RESUME-FORMATTING*
 
 // Add compatability for HAL 1.x
@@ -164,7 +193,7 @@ typedef cyhal_transfer_t            cyhal_sdio_transfer_type_t;
 #define CYHAL_SDIO_XFER_TYPE_WRITE  CYHAL_WRITE
 #endif
 
-#endif // if !defined(WIFI_MODE_M2M)
+#endif // if !defined(COMPONENT_WIFI_INTERFACE_M2M)
 
 static whd_driver_t whd_drv;
 
@@ -193,7 +222,7 @@ static whd_netif_funcs_t netif_if_default =
     .whd_network_process_ethernet_data = cy_network_process_ethernet_data,
 };
 
-#if !defined(WIFI_MODE_M2M)
+#if !defined(COMPONENT_WIFI_INTERFACE_M2M)
 static const whd_oob_config_t OOB_CONFIG =
 {
     .host_oob_pin      = CY_WIFI_HOST_WAKE_GPIO,
@@ -219,10 +248,10 @@ static void _cybsp_wifi_reset_wifi_chip(void)
 }
 
 
-#endif // if !defined(WIFI_MODE_M2M)
+#endif // if !defined(COMPONENT_WIFI_INTERFACE_M2M)
 
 
-#if defined(WIFI_MODE_SDIO)
+#if defined(COMPONENT_WIFI_INTERFACE_SDIO)
 //--------------------------------------------------------------------------------------------------
 // _cybsp_wifi_sdio_try_send_cmd
 //--------------------------------------------------------------------------------------------------
@@ -278,6 +307,9 @@ static cy_rslt_t _cybsp_wifi_sdio_card_init(cyhal_sdio_t* sdio_object)
     #if !defined(CYHAL_UDB_SDIO)
     uint32_t argument       = 0;
     uint32_t io_num         = 0;
+    bool     abort_sdio     = false;
+    #else
+    const bool abort_sdio   = false;
     #endif /* !defined(CYHAL_UDB_SDIO) */
 
     do
@@ -346,7 +378,7 @@ static cy_rslt_t _cybsp_wifi_sdio_card_init(cyhal_sdio_t* sdio_object)
                                 {
                                     // Changing IO voltage is not supported by current
                                     // implementation. No reason to try again.
-                                    break;
+                                    abort_sdio = true;
                                 }
                             }
                         }
@@ -362,7 +394,7 @@ static cy_rslt_t _cybsp_wifi_sdio_card_init(cyhal_sdio_t* sdio_object)
             {
                 result = CYBSP_RSLT_WIFI_SDIO_ENUM_IO_NOT_SUPPORTED;
                 // IO is not supported by this SD device, no reason to try enumeration again
-                break;
+                abort_sdio = true;
             }
         }
         #endif /* !defined(CYHAL_UDB_SDIO) */
@@ -375,12 +407,13 @@ static cy_rslt_t _cybsp_wifi_sdio_card_init(cyhal_sdio_t* sdio_object)
                                                    no_argument, &rel_addr);
         }
 
-        if (result != CY_RSLT_SUCCESS)
+        if ((!abort_sdio) && (result != CY_RSLT_SUCCESS))
         {
             cyhal_system_delay_ms(SDIO_RETRY_DELAY_MS);
         }
         loop_count++;
-    } while ((result != CY_RSLT_SUCCESS) && (loop_count <= SDIO_ENUMERATION_TRIES));
+    } while ((!abort_sdio) && (result != CY_RSLT_SUCCESS) &&
+             (loop_count <= SDIO_ENUMERATION_TRIES));
 
     if (result == CY_RSLT_SUCCESS)
     {
@@ -444,12 +477,11 @@ static cy_rslt_t _cybsp_wifi_sdio_card_init(cyhal_sdio_t* sdio_object)
 
 
 //--------------------------------------------------------------------------------------------------
-// _cybsp_wifi_sdio_init_bus
+// _cybsp_wifi_sdio_init_bus2
 //--------------------------------------------------------------------------------------------------
-static cy_rslt_t _cybsp_wifi_sdio_init_bus(void)
+static cy_rslt_t _cybsp_wifi_sdio_init_bus2(cyhal_sdio_t* obj)
 {
-    cyhal_sdio_t* sdio_p = cybsp_get_wifi_sdio_obj();
-    cy_rslt_t result = _cybsp_wifi_sdio_card_init(sdio_p);
+    cy_rslt_t result = _cybsp_wifi_sdio_card_init(obj);
     if (result == CY_RSLT_SUCCESS)
     {
         // If the configurator reserved the pin, we need to release it here since
@@ -466,41 +498,78 @@ static cy_rslt_t _cybsp_wifi_sdio_init_bus(void)
             .high_speed_sdio_clock = WHD_FALSE,
             .oob_config            = OOB_CONFIG
         };
-        whd_bus_sdio_attach(whd_drv, &whd_sdio_config, sdio_p);
+        whd_bus_sdio_attach(whd_drv, &whd_sdio_config, obj);
     }
+    return result;
+}
+
+
+#if defined(CYBSP_WIFI_SDIO_NEEDS_INIT)
+static cyhal_sdio_t sdio_obj;
+#endif
+
+//--------------------------------------------------------------------------------------------------
+// _cybsp_wifi_sdio_init_bus
+//--------------------------------------------------------------------------------------------------
+static cy_rslt_t _cybsp_wifi_sdio_init_bus(void)
+{
+    #if defined(CYBSP_WIFI_SDIO_NEEDS_INIT)
+    cy_rslt_t result = cyhal_sdio_init(&sdio_obj, CYBSP_WIFI_SDIO_CMD, CYBSP_WIFI_SDIO_CLK,
+                                       CYBSP_WIFI_SDIO_D0, CYBSP_WIFI_SDIO_D1, CYBSP_WIFI_SDIO_D2,
+                                       CYBSP_WIFI_SDIO_D3);
+
+    if (result == CY_RSLT_SUCCESS)
+    {
+        result = _cybsp_wifi_sdio_init_bus2(&sdio_obj);
+        if (result != CY_RSLT_SUCCESS)
+        {
+            cyhal_sdio_free(&sdio_obj);
+        }
+    }
+    #else // if defined(CYBSP_WIFI_SDIO_NEEDS_INIT)
+    cyhal_sdio_t* sdio_p = cybsp_get_wifi_sdio_obj();
+    cy_rslt_t result = _cybsp_wifi_sdio_init_bus2(sdio_p);
+    #endif // if defined(CYBSP_WIFI_SDIO_NEEDS_INIT)
 
     return result;
 }
 
 
-#elif defined(WIFI_MODE_SPI)
+#elif defined(COMPONENT_WIFI_INTERFACE_SPI)
 
 //--------------------------------------------------------------------------------------------------
 // _cybsp_wifi_spi_init_bus
 //--------------------------------------------------------------------------------------------------
 static cy_rslt_t _cybsp_wifi_spi_init_bus(void)
 {
-    cyhal_spi_t spi_obj;
+    static cyhal_spi_t spi_obj;
     cy_rslt_t rslt = cyhal_spi_init(&spi_obj,
                                     CYBSP_WIFI_SPI_MOSI, CYBSP_WIFI_SPI_MISO, CYBSP_WIFI_SPI_SCLK,
                                     CYBSP_WIFI_SPI_SSEL,
                                     NULL, 32, CYHAL_SPI_MODE_00_MSB, false);
-    cyhal_spi_set_frequency(&spi_obj, 50000000); // 50 MHz operation
     if (CY_RSLT_SUCCESS == rslt)
     {
-        whd_spi_config_t whd_spi_config =
+        rslt = cyhal_spi_set_frequency(&spi_obj, 50000000); // 50 MHz operation
+        if (CY_RSLT_SUCCESS == rslt)
         {
-            .is_normal_mode      = false,
-            .oob_config          = OOB_CONFIG
-        };
-        rslt = whd_bus_spi_attach(whd_drv, &whd_spi_config, &spi_obj);
+            whd_spi_config_t whd_spi_config =
+            {
+                .is_normal_mode      = false,
+                .oob_config          = OOB_CONFIG
+            };
+            rslt = whd_bus_spi_attach(whd_drv, &whd_spi_config, &spi_obj);
+        }
+        else
+        {
+            cyhal_spi_free(&spi_obj);
+        }
     }
 
     return rslt;
 }
 
 
-#elif defined(WIFI_MODE_M2M)
+#elif defined(COMPONENT_WIFI_INTERFACE_M2M)
 
 static cyhal_m2m_t m2m_obj;
 
@@ -522,7 +591,7 @@ static cy_rslt_t _cybsp_wifi_m2m_init_bus(void)
 }
 
 
-#endif // defined(WIFI_MODE_M2M)
+#endif // defined(COMPONENT_WIFI_INTERFACE_M2M)
 
 
 //--------------------------------------------------------------------------------------------------
@@ -530,14 +599,14 @@ static cy_rslt_t _cybsp_wifi_m2m_init_bus(void)
 //--------------------------------------------------------------------------------------------------
 static inline cy_rslt_t _cybsp_wifi_bus_init(void)
 {
-    #if !defined(WIFI_MODE_M2M)
+    #if !defined(COMPONENT_WIFI_INTERFACE_M2M)
     _cybsp_wifi_reset_wifi_chip();
     #endif
-    #if defined(WIFI_MODE_SDIO)
+    #if defined(COMPONENT_WIFI_INTERFACE_SDIO)
     return _cybsp_wifi_sdio_init_bus();
-    #elif defined(WIFI_MODE_SPI)
+    #elif defined(COMPONENT_WIFI_INTERFACE_SPI)
     return _cybsp_wifi_spi_init_bus();
-    #elif defined(WIFI_MODE_M2M)
+    #elif defined(COMPONENT_WIFI_INTERFACE_M2M)
     return _cybsp_wifi_m2m_init_bus();
     #endif
 }
@@ -548,11 +617,11 @@ static inline cy_rslt_t _cybsp_wifi_bus_init(void)
 //--------------------------------------------------------------------------------------------------
 static inline void _cybsp_wifi_bus_detach(void)
 {
-    #if defined(WIFI_MODE_SDIO)
+    #if defined(COMPONENT_WIFI_INTERFACE_SDIO)
     whd_bus_sdio_detach(whd_drv);
-    #elif defined(WIFI_MODE_SPI)
+    #elif defined(COMPONENT_WIFI_INTERFACE_SPI)
     whd_bus_spi_detach(whd_drv);
-    #elif defined(WIFI_MODE_M2M)
+    #elif defined(COMPONENT_WIFI_INTERFACE_M2M)
     whd_bus_m2m_detach(whd_drv);
     #endif
 }
@@ -567,7 +636,7 @@ cy_rslt_t cybsp_wifi_init_primary_extended(whd_interface_t* interface,
                                            whd_buffer_funcs_t* buffer_if,
                                            whd_netif_funcs_t* netif_if)
 {
-    #if defined(WIFI_MODE_M2M)
+    #if defined(COMPONENT_WIFI_INTERFACE_M2M)
     cy_rslt_t result = CY_RSLT_SUCCESS;
     #else
     cy_rslt_t result = cyhal_gpio_init(CYBSP_WIFI_WL_REG_ON, CYHAL_GPIO_DIR_OUTPUT,
@@ -614,7 +683,7 @@ cy_rslt_t cybsp_wifi_init_primary_extended(whd_interface_t* interface,
             }
         }
 
-        #if !defined(WIFI_MODE_M2M)
+        #if !defined(COMPONENT_WIFI_INTERFACE_M2M)
         if (result != CY_RSLT_SUCCESS)
         {
             cyhal_gpio_free(CYBSP_WIFI_WL_REG_ON);
@@ -645,12 +714,19 @@ cy_rslt_t cybsp_wifi_deinit(whd_interface_t interface)
     if (result == CY_RSLT_SUCCESS)
     {
         _cybsp_wifi_bus_detach();
-        #if !defined(WIFI_MODE_M2M)
+        #if !defined(COMPONENT_WIFI_INTERFACE_M2M)
         cyhal_gpio_free(CYBSP_WIFI_WL_REG_ON);
         #endif
         // While deinit() takes an interface, it only uses it to get the underlying whd driver to
         // cleanup. As a result, we only need to call this on one of the interfaces.
         result = whd_deinit(interface);
+
+        #if defined(CYBSP_WIFI_SDIO_NEEDS_INIT)
+        if (result == CY_RSLT_SUCCESS)
+        {
+            cyhal_sdio_free(&sdio_obj);
+        }
+        #endif
     }
     return result;
 }
