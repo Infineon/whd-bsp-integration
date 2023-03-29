@@ -80,9 +80,7 @@ extern "C" {
 #define WLAN_POWER_UP_DELAY_MS              (250)
 #define WLAN_CBUCK_DISCHARGE_MS             (10)
 
-#if defined(COMPONENT_WIFI_INTERFACE_SDIO) || \
-    defined(COMPONENT_WIFI_INTERFACE_SPI) || \
-    defined(COMPONENT_WIFI_INTERFACE_M2M)
+#if defined(COMPONENT_WIFI_INTERFACE_SDIO)
 
 // Old versions of the BSP performed WIFI SDIO init as part of cybsp_init() this has been replaced
 // with just minimal resource reservation when needed in the latest versions of BSPs.
@@ -91,18 +89,23 @@ extern "C" {
 #else
 
 #if (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SDIO_INTERFACE)
-#define COMPONENT_WIFI_INTERFACE_SDIO
-#elif (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SPI_INTERFACE)
-#define COMPONENT_WIFI_INTERFACE_SPI
-#elif (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_M2M_INTERFACE)
-#define COMPONENT_WIFI_INTERFACE_M2M
-#else
-// For old versions of HAL/BSP fallback to the default interface
+#if !defined(COMPONENT_WIFI_INTERFACE_SDIO)
 #define COMPONENT_WIFI_INTERFACE_SDIO
 #endif
+#elif (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SPI_INTERFACE)
+#if !defined(COMPONENT_WIFI_INTERFACE_SPI)
+#define COMPONENT_WIFI_INTERFACE_SPI
+#endif
+#elif (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_M2M_INTERFACE)
+#if !defined(COMPONENT_WIFI_INTERFACE_M2M)
+#define COMPONENT_WIFI_INTERFACE_M2M
+#endif
+#else // if (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SDIO_INTERFACE)
+// For old versions of HAL/BSP fallback to the default interface
+#define COMPONENT_WIFI_INTERFACE_SDIO
+#endif // if (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SDIO_INTERFACE)
 
-#endif // if defined(COMPONENT_WIFI_INTERFACE_SDIO) || defined(COMPONENT_WIFI_INTERFACE_SPI) ||
-// defined(COMPONENT_WIFI_INTERFACE_M2M)
+#endif // if defined(COMPONENT_WIFI_INTERFACE_SDIO)
 
 #if !defined(COMPONENT_WIFI_INTERFACE_M2M)
 
