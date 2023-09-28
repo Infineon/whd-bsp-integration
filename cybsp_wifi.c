@@ -74,6 +74,22 @@ extern "C" {
     #define CY_USE_OOB_INTR                 (1u)
 #endif // defined(CY_WIFI_HOST_WAKE_SW_FORCE)
 
+/** Default GPIO drive mode for CYBSP_WIFI_WL_REG_ON. Override with Makefile define  */
+#ifndef CYBSP_WIFI_WL_REG_ON_GPIO_DRIVE_MODE
+#define CYBSP_WIFI_WL_REG_ON_GPIO_DRIVE_MODE    (CYHAL_GPIO_DRIVE_PULLUP)
+#endif
+
+/** Default GPIO drive mode for CYBSP_WIFI_WL_HOSTWAKE. Override with Makefile define  */
+#ifndef CYBSP_WIFI_WL_HOSTWAKE_DRIVE_MODE
+#define CYBSP_WIFI_WL_HOSTWAKE_DRIVE_MODE        (CYHAL_GPIO_DRIVE_NONE)
+#endif
+
+/** Default GPIO drive mode for CYBSP_WIFI_WL_HOSTWAKE. Override with Makefile define  */
+#ifndef CYBSP_WIFI_WL_HOSTWAKE_INIT_STATE
+#define CYBSP_WIFI_WL_HOSTWAKE_INIT_STATE       (WHD_FALSE)
+#endif
+
+
 /** \} group_bsp_wifi */
 
 #define DEFAULT_OOB_PIN                     (0)
@@ -233,6 +249,10 @@ static const whd_oob_config_t OOB_CONFIG =
     .is_falling_edge   = (CY_WIFI_HOST_WAKE_IRQ_EVENT == CYHAL_GPIO_IRQ_FALL)
         ? WHD_TRUE
         : WHD_FALSE,
+    #if defined(WHD_OOB_CONFIG_VERSION) && ((WHD_OOB_CONFIG_VERSION) >= 2)
+    .drive_mode        = CYBSP_WIFI_WL_HOSTWAKE_DRIVE_MODE,
+    .init_drive_state  = CYBSP_WIFI_WL_HOSTWAKE_INIT_STATE,
+    #endif
     .intr_priority     = CY_WIFI_OOB_INTR_PRIORITY
 };
 
@@ -643,7 +663,7 @@ cy_rslt_t cybsp_wifi_init_primary_extended(whd_interface_t* interface,
     cy_rslt_t result = CY_RSLT_SUCCESS;
     #else
     cy_rslt_t result = cyhal_gpio_init(CYBSP_WIFI_WL_REG_ON, CYHAL_GPIO_DIR_OUTPUT,
-                                       CYHAL_GPIO_DRIVE_PULLUP, false);
+                                       CYBSP_WIFI_WL_REG_ON_GPIO_DRIVE_MODE, false);
     #endif
 
     if (result == CY_RSLT_SUCCESS)
