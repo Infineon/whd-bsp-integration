@@ -7,6 +7,9 @@ This library helps streamline the process of getting the WiFi Host Driver (WHD) 
 * Framework for connecting WHD to LwIP/NetXDuo network interface (whd_netif_funcs_t)
 
 ### What Changed?
+#### v2.3.0
+* Added support for CAT5.
+* Added support for IOCTL buffers greater than max MTU for CAT5.
 #### v2.2.1
 * Allow BSP to override default configuration of WL_REG_ON and WL_HOST_WAKE pins.
 #### v2.2.0
@@ -46,7 +49,7 @@ This version of the WiFi Host Driver Board Support Package Integration was valid
 | :---                                      | :----:  |
 | ModusToolbox™ Software Environment        | 3.0.0   |
 | GCC Compiler                              | 11.3.1  |
-| IAR Compiler                              | 9.30.1  |
+| IAR Compiler                              | 9.40.2  |
 | ARM Compiler                              | 6.16    |
 
 Minimum required ModusToolbox™ Software Environment: v2.0

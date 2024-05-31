@@ -31,6 +31,10 @@
 #include "whd_types.h"
 #include "cyhal.h"
 
+#ifdef COMPONENT_CAT5
+#include "whd_int.h"
+#endif
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -50,7 +54,11 @@ extern "C" {
  *  RTOS being used.
  */
 #if !defined(CY_WIFI_THREAD_PRIORITY)
+#ifndef COMPONENT_CAT5
 #define CY_WIFI_THREAD_PRIORITY             (CY_RTOS_PRIORITY_HIGH)
+#else
+#define CY_WIFI_THREAD_PRIORITY             (CY_RTOS_PRIORITY_MAX)
+#endif /* WHD_TO_TEST */
 #endif
 
 /** Defines the country this will operate in for wifi initialization parameters. See the
@@ -104,26 +112,26 @@ extern "C" {
 
 #else
 
-#if (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SDIO_INTERFACE)
+#if defined(CYBSP_WIFI_INTERFACE_TYPE) && (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SDIO_INTERFACE)
 #if !defined(COMPONENT_WIFI_INTERFACE_SDIO)
 #define COMPONENT_WIFI_INTERFACE_SDIO
 #endif
-#elif (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SPI_INTERFACE)
+#elif defined(CYBSP_WIFI_INTERFACE_TYPE) && (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SPI_INTERFACE)
 #if !defined(COMPONENT_WIFI_INTERFACE_SPI)
 #define COMPONENT_WIFI_INTERFACE_SPI
 #endif
-#elif (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_M2M_INTERFACE)
+#elif defined(CYBSP_WIFI_INTERFACE_TYPE) && (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_M2M_INTERFACE)
 #if !defined(COMPONENT_WIFI_INTERFACE_M2M)
 #define COMPONENT_WIFI_INTERFACE_M2M
 #endif
-#else // if (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SDIO_INTERFACE)
+#elif !defined(COMPONENT_WIFI_INTERFACE_OCI)
 // For old versions of HAL/BSP fallback to the default interface
 #define COMPONENT_WIFI_INTERFACE_SDIO
 #endif // if (CYBSP_WIFI_INTERFACE_TYPE == CYBSP_SDIO_INTERFACE)
 
 #endif // if defined(COMPONENT_WIFI_INTERFACE_SDIO)
 
-#if !defined(COMPONENT_WIFI_INTERFACE_M2M)
+#if !(defined(COMPONENT_WIFI_INTERFACE_M2M) || defined(COMPONENT_WIFI_INTERFACE_OCI))
 
 #define SDIO_ENUMERATION_TRIES              (500)
 #define SDIO_RETRY_DELAY_MS                 (1)
@@ -241,7 +249,7 @@ static whd_netif_funcs_t netif_if_default =
     .whd_network_process_ethernet_data = cy_network_process_ethernet_data,
 };
 
-#if !defined(COMPONENT_WIFI_INTERFACE_M2M)
+#if !(defined(COMPONENT_WIFI_INTERFACE_M2M) || defined(COMPONENT_WIFI_INTERFACE_OCI))
 static const whd_oob_config_t OOB_CONFIG =
 {
     .host_oob_pin      = CY_WIFI_HOST_WAKE_GPIO,
@@ -614,6 +622,26 @@ static cy_rslt_t _cybsp_wifi_m2m_init_bus(void)
 }
 
 
+#elif defined(COMPONENT_WIFI_INTERFACE_OCI)
+
+//--------------------------------------------------------------------------------------------------
+// _cybsp_wifi_custom_init_bus
+//--------------------------------------------------------------------------------------------------
+static cy_rslt_t _cybsp_wifi_custom_init_bus(void)
+{
+    cy_rslt_t rslt;
+
+    whd_oci_config_t whd_oci_config =
+    {
+        .is_normal_mode = false,
+    };
+    // Note: The oci itself is initialized in the WHD
+    rslt = whd_bus_oci_attach(whd_drv, &whd_oci_config);
+
+    return rslt;
+}
+
+
 #endif // defined(COMPONENT_WIFI_INTERFACE_M2M)
 
 
@@ -622,7 +650,7 @@ static cy_rslt_t _cybsp_wifi_m2m_init_bus(void)
 //--------------------------------------------------------------------------------------------------
 static inline cy_rslt_t _cybsp_wifi_bus_init(void)
 {
-    #if !defined(COMPONENT_WIFI_INTERFACE_M2M)
+    #if !(defined(COMPONENT_WIFI_INTERFACE_M2M) || defined(COMPONENT_WIFI_INTERFACE_OCI))
     _cybsp_wifi_reset_wifi_chip();
     #endif
     #if defined(COMPONENT_WIFI_INTERFACE_SDIO)
@@ -631,6 +659,8 @@ static inline cy_rslt_t _cybsp_wifi_bus_init(void)
     return _cybsp_wifi_spi_init_bus();
     #elif defined(COMPONENT_WIFI_INTERFACE_M2M)
     return _cybsp_wifi_m2m_init_bus();
+    #elif defined(COMPONENT_WIFI_INTERFACE_OCI)
+    return _cybsp_wifi_custom_init_bus();
     #endif
 }
 
@@ -646,6 +676,8 @@ static inline void _cybsp_wifi_bus_detach(void)
     whd_bus_spi_detach(whd_drv);
     #elif defined(COMPONENT_WIFI_INTERFACE_M2M)
     whd_bus_m2m_detach(whd_drv);
+    #elif defined(COMPONENT_WIFI_INTERFACE_OCI)
+    whd_bus_oci_detach(whd_drv);
     #endif
 }
 
@@ -659,7 +691,7 @@ cy_rslt_t cybsp_wifi_init_primary_extended(whd_interface_t* interface,
                                            whd_buffer_funcs_t* buffer_if,
                                            whd_netif_funcs_t* netif_if)
 {
-    #if defined(COMPONENT_WIFI_INTERFACE_M2M)
+    #if (defined(COMPONENT_WIFI_INTERFACE_M2M) || defined(COMPONENT_WIFI_INTERFACE_OCI))
     cy_rslt_t result = CY_RSLT_SUCCESS;
     #else
     cy_rslt_t result = cyhal_gpio_init(CYBSP_WIFI_WL_REG_ON, CYHAL_GPIO_DIR_OUTPUT,
@@ -685,28 +717,31 @@ cy_rslt_t cybsp_wifi_init_primary_extended(whd_interface_t* interface,
             netif_if = &netif_if_default;
         }
 
-        result = whd_init(&whd_drv, init_config, resource_if, buffer_if, netif_if);
         if (result == CY_RSLT_SUCCESS)
         {
-            result = _cybsp_wifi_bus_init();
-
+            result = whd_init(&whd_drv, init_config, resource_if, buffer_if, netif_if);
             if (result == CY_RSLT_SUCCESS)
             {
-                result = whd_wifi_on(whd_drv, interface);
+                result = _cybsp_wifi_bus_init();
+
+                if (result == CY_RSLT_SUCCESS)
+                {
+                    result = whd_wifi_on(whd_drv, interface);
+
+                    if (result != CY_RSLT_SUCCESS)
+                    {
+                        _cybsp_wifi_bus_detach();
+                    }
+                }
 
                 if (result != CY_RSLT_SUCCESS)
                 {
-                    _cybsp_wifi_bus_detach();
+                    whd_deinit(*interface);
                 }
-            }
-
-            if (result != CY_RSLT_SUCCESS)
-            {
-                whd_deinit(*interface);
             }
         }
 
-        #if !defined(COMPONENT_WIFI_INTERFACE_M2M)
+        #if !(defined(COMPONENT_WIFI_INTERFACE_M2M) || defined(COMPONENT_WIFI_INTERFACE_OCI))
         if (result != CY_RSLT_SUCCESS)
         {
             cyhal_gpio_free(CYBSP_WIFI_WL_REG_ON);
@@ -737,7 +772,7 @@ cy_rslt_t cybsp_wifi_deinit(whd_interface_t interface)
     if (result == CY_RSLT_SUCCESS)
     {
         _cybsp_wifi_bus_detach();
-        #if !defined(COMPONENT_WIFI_INTERFACE_M2M)
+        #if !(defined(COMPONENT_WIFI_INTERFACE_M2M) || defined(COMPONENT_WIFI_INTERFACE_OCI))
         cyhal_gpio_free(CYBSP_WIFI_WL_REG_ON);
         #endif
         // While deinit() takes an interface, it only uses it to get the underlying whd driver to
