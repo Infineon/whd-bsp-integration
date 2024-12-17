@@ -7,6 +7,8 @@ This library helps streamline the process of getting the WiFi Host Driver (WHD) 
 * Framework for connecting WHD to LwIP/NetXDuo network interface (whd_netif_funcs_t)
 
 ### What Changed?
+#### v2.3.1
+* Enabled support for D-cache.
 #### v2.3.0
 * Added support for CAT5.
 * Added support for IOCTL buffers greater than max MTU for CAT5.

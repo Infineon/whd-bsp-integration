@@ -536,8 +536,13 @@ static cy_rslt_t _cybsp_wifi_sdio_init_bus2(cyhal_sdio_t* obj)
 
 
 #if defined(CYBSP_WIFI_SDIO_NEEDS_INIT)
+#if defined (__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U)
+CY_SECTION_SHAREDMEM static cyhal_sdio_t sdio_obj;
+#else
 static cyhal_sdio_t sdio_obj;
 #endif
+#endif
+
 
 //--------------------------------------------------------------------------------------------------
 // _cybsp_wifi_sdio_init_bus
